@@ -32,12 +32,11 @@ export default function Footer() {
     <footer 
       ref={footerRef} 
       className="bg-white/5 border-t border-white/10 pt-20 pb-10 px-6 mt-20"
-      dir="rtl"
     >
       <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
         
         {/* Brand Section */}
-        <div className="footer-anim text-center md:text-right">
+        <div className="footer-anim text-center md:text-right" dir="rtl">
           <h2 className="text-4xl font-black mb-4 uppercase tracking-tighter">
             فروج <span className="text-[#ff4400]">الأمين</span>
           </h2>

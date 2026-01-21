@@ -145,7 +145,7 @@ export default function Hero() {
       <OverlayLoader visible={!modelReady} />
 
       {/* Main UI Layer */}
-      <div className="relative z-10 flex flex-col md:flex-row items-center justify-between pt-36 h-full w-full px-[6%] py-8 md:py-0 pointer-events-none">
+      <div className="relative z-10 flex flex-col md:flex-row items-center justify-between pt-20 h-full w-full px-[6%] py-8 md:py-0 pointer-events-none">
         
         <div 
           ref={leftTextRef} 
