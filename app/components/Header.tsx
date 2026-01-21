@@ -134,7 +134,7 @@ useEffect(() => {
           {/* Logo */}
           <Link href="/" className="relative z-110">
             <Image 
-              src="/chimkin.jpg" 
+              src="/logo.jpg" 
               alt="Logo" 
               width={120} 
               height={50} 
