@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useGLTF, Stage, ContactShadows, Center, useProgress } from "@react-three/drei";
+import { useGLTF, Stage, Center, useProgress } from "@react-three/drei";
 import gsap from "gsap";
 
 // 1. Loader (Unchanged)
@@ -38,7 +38,7 @@ function OverlayLoader({ visible }: { visible: boolean }) {
 }
 
 // 2. Chicken Model
-function ChickenGrill({ isMobile }: { isMobile: boolean }) {
+function ChickenGrill({ isMobile, isIpad }: { isMobile: boolean; isIpad: boolean }) {
   const { scene } = useGLTF("/models/chicken-compressed.glb");
 
   useFrame((state) => {
@@ -47,11 +47,12 @@ function ChickenGrill({ isMobile }: { isMobile: boolean }) {
     }
   });
 
-  return <primitive object={scene} scale={isMobile ? 0.6 : 1} />;
+  return <primitive object={scene} scale={isMobile ? 0.6 : isIpad ? 0.7 : 1.1 } />;
 }
 
 export default function Hero() {
   const [isMobile, setIsMobile] = useState(false);
+  const [isIpad, setIsIpad] = useState(false);
   const [modelReady, setModelReady] = useState(false);
   // NEW: State to track if the Hero section is visible
   const [isInView, setIsInView] = useState(true); 
@@ -71,7 +72,10 @@ export default function Hero() {
   }, [progress, active, modelReady]);
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsIpad(window.innerWidth >= 768 && window.innerWidth <= 1280);
+    }
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -144,30 +148,32 @@ export default function Hero() {
       
       <OverlayLoader visible={!modelReady} />
 
-      {/* Main UI Layer */}
-      <div className="relative z-10 flex flex-col md:flex-row items-center justify-between pt-20 h-full w-full px-[6%] py-8 md:py-0 pointer-events-none">
-        
-        <div 
-          ref={leftTextRef} 
-          className="opacity-0 text-center md:text-right"
-          style={{ visibility: modelReady ? 'visible' : 'hidden' }}
-        >
-          <h1 dir="rtl" className="font-black leading-tight text-[18vw] md:text-[15vw]">
-            فروج <br className="hidden md:block"/>
-            <span className="text-[#ff4400]">الأمين</span>
-          </h1>
-        </div>
+   {/* Main UI Layer */}
+<div className="relative z-10 flex flex-col xl:flex-row items-center justify-between pt-20 h-full w-full px-[6%] py-8 xl:py-0 pointer-events-none">
+  
+  {/* TOP TEXT */}
+  <div 
+    ref={leftTextRef} 
+    className="opacity-0 text-center xl:text-right"
+    style={{ visibility: modelReady ? 'visible' : 'hidden' }}
+  >
+    <h1 dir="rtl" className="font-black leading-tight text-[18vw] md:text-[12vw] xl:text-[15vw]">
+      فروج <br className="hidden xl:block"/>
+      <span className="text-[#ff4400]">الأمين</span>
+    </h1>
+  </div>
 
-        <div 
-          className="text-center md:text-left pb-[14vh] md:pb-0"
-          style={{ visibility: modelReady ? 'visible' : 'hidden' }}
-        >
-          <h1 dir="rtl" className="font-black leading-none text-[10vw] md:text-[6.5vw] flex flex-col items-center md:items-start">
-            <div className="flex flex-row-reverse">{renderSlogan("ما كيف")}</div>
-            <div className="flex flex-row-reverse mt-2">{renderSlogan("أمين برمتو", "text-[#ffaa00]")}</div>
-          </h1>
-        </div>
-      </div>
+  {/* BOTTOM TEXT */}
+  <div 
+    className="text-center xl:text-left pb-[10vh] xl:pb-0"
+    style={{ visibility: modelReady ? 'visible' : 'hidden' }}
+  >
+    <h1 dir="rtl" className="font-black leading-none text-[10vw] md:text-[6vw] xl:text-[6.5vw] flex flex-col items-center xl:items-start">
+      <div className="flex flex-row-reverse">{renderSlogan("ما كيف")}</div>
+      <div className="flex flex-row-reverse mt-2">{renderSlogan("أمين برمتو", "text-[#ffaa00]")}</div>
+    </h1>
+  </div>
+</div>
 
       {/* 3D Scene Layer */}
       <div className="absolute inset-0 z-0">
@@ -184,7 +190,7 @@ export default function Hero() {
         >
             <Stage environment="city" intensity={1.5} adjustCamera={false}>
               <Center top>
-                <ChickenGrill isMobile={isMobile} />
+                <ChickenGrill isMobile={isMobile} isIpad={isIpad} />
               </Center>
             </Stage>
         </Canvas>
