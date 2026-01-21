@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { supabaseChicken } from "@/lib/supabase";
 
+// FIX 1: This prevents Vercel from trying to "pre-build" this API route
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: Request) {
   try {
     const formData = await req.formData();
