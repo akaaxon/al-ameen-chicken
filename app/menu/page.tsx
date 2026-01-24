@@ -108,7 +108,7 @@ function MenuGrid() {
     <div className="max-w-[1400px] mx-auto px-6">
       <div className="flex justify-between items-end mb-4 md:mb-6">
         <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none">
-          The <span className="text-[#F3494A">Menu</span>
+          The <span className="text-[#F3494A]">Menu</span>
         </h1>
         <div className="flex flex-col items-end">
           <span className="text-sm font-bold text-[#F3494A] uppercase">
