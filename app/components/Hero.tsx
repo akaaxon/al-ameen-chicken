@@ -50,7 +50,7 @@ export default function Hero() {
           alt="Al Amin Logo"
           fill
           priority
-          
+
           className="object-contain"
         />
       </div>
@@ -67,7 +67,7 @@ export default function Hero() {
       {/* 3. BUTTON */}
       <div ref={buttonRef} className="opacity-0">
         <Link href="/menu" className="group">
-          <div className="px-12 py-5 bg-white text-black font-black text-lg md:text-xl rounded-full transition-transform active:scale-95">
+          <div className="px-12 py-5 bg-[#F1B135] text-[#F3494A] font-black text-lg md:text-xl rounded-full transition-transform active:scale-95">
             VIEW MENU
           </div>
         </Link>
