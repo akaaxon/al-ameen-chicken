@@ -50,7 +50,7 @@ export default function Header() {
 
     // Initial positions
     gsap.set(panelRef.current, { xPercent: 100 });
-    gsap.set(layersRef.current?.children, { xPercent: 100 });
+    gsap.set(gsap.utils.toArray(layersRef.current?.children || []), { xPercent: 100 });
   }, [mounted]);
 
   const toggleMenu = useCallback(() => {

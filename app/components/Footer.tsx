@@ -6,6 +6,11 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export default function Footer() {
   const footerRef = useRef(null);
+  const socialItems = [
+    { label: "Instagram", link: "https://www.instagram.com/al_amin_snack" },
+    { label: "TikTok", link: "https://www.tiktok.com/@al_amin_snack" },
+    { label: "WhatsApp", link: "https://wa.me/96170772324" },
+  ];
 
   useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -45,13 +50,13 @@ export default function Footer() {
 
         {/* Social Links */}
         <div className="footer-anim flex flex-col gap-3 text-center md:text-left">
-          {["Instagram", "TikTok", "WhatsApp"].map((social) => (
+          {socialItems.map((social) => (
             <a 
-              key={social}
-              href="#" 
+              key={social.label}
+              href={social.link}   
               className="text-2xl font-bold hover:text-[#ff4400] transition-colors flex items-center justify-center md:justify-start gap-2 group"
             >
-              {social} 
+              { social.label } 
               <span className="text-sm opacity-50 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300">
                 ↗
               </span>
