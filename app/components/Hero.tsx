@@ -1,200 +1,85 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { useGLTF, Stage, Center, useProgress } from "@react-three/drei";
+import { useRef, useLayoutEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import gsap from "gsap";
 
-// 1. Loader (Unchanged)
-function OverlayLoader({ visible }: { visible: boolean }) {
-  const { progress } = useProgress();
-  const overlayRef = useRef(null);
-
-  useEffect(() => {
-    if (!visible && overlayRef.current) {
-      gsap.to(overlayRef.current, {
-        opacity: 0,
-        duration: 0.8,
-        ease: "power2.inOut",
-        onComplete: () => {
-          if (overlayRef.current) (overlayRef.current as HTMLElement).style.display = "none";
-        },
-      });
-    }
-  }, [visible]);
-
-  return (
-    <div
-      ref={overlayRef}
-      className="fixed inset-0 z-100 flex flex-col items-center justify-center bg-black transition-opacity"
-    >
-      <div className="relative w-20 h-20 mb-4">
-        <div className="absolute inset-0 border-4 border-[#ff4400]/20 rounded-full"></div>
-        <div className="absolute inset-0 border-4 border-t-[#ff4400] rounded-full animate-spin"></div>
-      </div>
-      <p className="text-white font-black text-2xl font-brand">{Math.round(progress)}%</p>
-    </div>
-  );
-}
-
-// 2. Chicken Model
-function ChickenGrill({ isMobile, isIpad }: { isMobile: boolean; isIpad: boolean }) {
-  const { scene } = useGLTF("/models/chicken-compressed.glb");
-
-  useFrame((state) => {
-    if (scene) {
-      scene.rotation.z = state.clock.getElapsedTime() * 0.5;
-    }
-  });
-
-  return <primitive object={scene} scale={isMobile ? 0.6 : isIpad ? 0.7 : 1.1 } />;
-}
-
 export default function Hero() {
-  const [isMobile, setIsMobile] = useState(false);
-  const [isIpad, setIsIpad] = useState(false);
-  const [modelReady, setModelReady] = useState(false);
-  // NEW: State to track if the Hero section is visible
-  const [isInView, setIsInView] = useState(true); 
-  
-  const { progress, active } = useProgress();
-  const containerRef = useRef<HTMLElement>(null); // Typed explicitly
-  const leftTextRef = useRef<HTMLDivElement>(null);
-  const sloganWordsRef = useRef<HTMLSpanElement[]>([]);
-  const hasAnimated = useRef(false);
+  const containerRef = useRef<HTMLElement>(null);
+  const logoRef = useRef<HTMLDivElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const buttonRef = useRef<HTMLDivElement>(null);
 
-  // Monitor loading progress
-  useEffect(() => {
-    if (progress === 100 && !active && !modelReady) {
-      const timer = setTimeout(() => setModelReady(true), 500);
-      return () => clearTimeout(timer);
-    }
-  }, [progress, active, modelReady]);
+  // Entrance Animation
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ delay: 0.2 });
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-      setIsIpad(window.innerWidth >= 768 && window.innerWidth <= 1280);
-    }
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+      // 1. Logo: Scale up and fade in
+      tl.fromTo(logoRef.current,
+        { opacity: 0, scale: 0.8, filter: "blur(10px)" },
+        { opacity: 1, scale: 1, filter: "blur(0px)", duration: 1.5, ease: "power4.out" }
+      );
 
-  // NEW: Intersection Observer to pause rendering when off-screen
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        // Set state based on whether the Hero is intersecting with viewport
-        setIsInView(entry.isIntersecting);
-      },
-      { 
-        root: null, // viewport
-        threshold: 0 // trigger as soon as even 1 pixel is visible (or not)
-      }
-    );
+      // 2. Subtitle: Slide up
+      tl.fromTo(subtitleRef.current,
+        { opacity: 0, y: 20, letterSpacing: "0em" },
+        { opacity: 1, y: 0, letterSpacing: "0.2em", duration: 1, ease: "power3.out" },
+        "-=1.0"
+      );
 
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
-
-    return () => {
-      if (containerRef.current) observer.unobserve(containerRef.current);
-    };
-  }, []);
-
-  // Text Entrance Animation (Unchanged)
-  useEffect(() => {
-    if (!modelReady) return;
-
-    let ctx = gsap.context(() => {
-      if (!hasAnimated.current) {
-        hasAnimated.current = true;
-        const tl = gsap.timeline({ delay: 0.5 });
-
-        tl.fromTo(leftTextRef.current,
-          { opacity: 0, x: isMobile ? 0 : -50, filter: "blur(20px)" },
-          { opacity: 1, x: 0, filter: "blur(0px)", duration: 1.2, ease: "expo.out" }
-        );
-
-        tl.fromTo(sloganWordsRef.current,
-          { opacity: 0, y: 40, filter: "blur(10px) brightness(3)", skewX: -20 },
-          { opacity: 1, y: 0, filter: "blur(0px) brightness(1)", skewX: 0, duration: 1, stagger: 0.1, ease: "back.out(1.7)" },
-          "-=0.8"
-        );
-      }
+      // 3. Button: Slide up
+      tl.fromTo(buttonRef.current,
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 1, ease: "power3.out" },
+        "-=0.8"
+      );
     }, containerRef);
 
     return () => ctx.revert();
-  }, [modelReady, isMobile]);
-
-  const renderSlogan = (text: string, colorClass = "") => {
-    return text.split(" ").map((word, i) => (
-      <span
-        key={i}
-        ref={(el) => { if (el && !sloganWordsRef.current.includes(el)) sloganWordsRef.current.push(el); }}
-        className={`inline-block mx-2 opacity-0 ${colorClass}`}
-      >
-        {word}
-      </span>
-    ));
-  };
-
-  sloganWordsRef.current = [];
-  const pos: [number, number, number] = [5, 1.18, 18.66];
+  }, []);
 
   return (
-    <main ref={containerRef} className="relative h-screen w-screen bg-black overflow-hidden font-brand text-white">
+    <main 
+      ref={containerRef} 
+      className="relative h-screen w-full bg-black flex flex-col items-center justify-center overflow-hidden px-6"
+    >
       
-      <OverlayLoader visible={!modelReady} />
+      {/* Background Ambient Glow (Optional - adds depth behind the logo) */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#ff4400] opacity-[0.08] blur-[120px] rounded-full pointer-events-none" />
 
-   {/* Main UI Layer */}
-<div className="relative z-10 flex flex-col xl:flex-row items-center justify-between pt-20 h-full w-full px-[6%] py-8 xl:py-0 pointer-events-none">
-  
-  {/* TOP TEXT */}
-  <div 
-    ref={leftTextRef} 
-    className="opacity-0 text-center xl:text-right"
-    style={{ visibility: modelReady ? 'visible' : 'hidden' }}
-  >
-    <h1 dir="rtl" className="font-black leading-tight text-[18vw] md:text-[12vw] xl:text-[15vw]">
-      فروج <br className="hidden xl:block"/>
-      <span className="text-[#ff4400]">الأمين</span>
-    </h1>
-  </div>
-
-  {/* BOTTOM TEXT */}
-  <div 
-    className="text-center xl:text-left pb-[10vh] xl:pb-0"
-    style={{ visibility: modelReady ? 'visible' : 'hidden' }}
-  >
-    <h1 dir="rtl" className="font-black leading-none text-[10vw] md:text-[6vw] xl:text-[6.5vw] flex flex-col items-center xl:items-start">
-      <div className="flex flex-row-reverse">{renderSlogan("ما كيف")}</div>
-      <div className="flex flex-row-reverse mt-2">{renderSlogan("أمين برمتو", "text-[#ffaa00]")}</div>
-    </h1>
-  </div>
-</div>
-
-      {/* 3D Scene Layer */}
-      <div className="absolute inset-0 z-0">
-        {/* UPDATED: frameloop prop controls the rendering.
-            'always' = 60fps
-            'never' = 0fps (pauses completely)
-        */}
-        <Canvas 
-          frameloop={isInView ? "always" : "never"} 
-          dpr={[1,1.5 ]}
-          gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
-          shadows 
-          camera={{ position: pos, fov: 35 }}
-        >
-            <Stage environment="city" intensity={1.5} adjustCamera={false}>
-              <Center top>
-                <ChickenGrill isMobile={isMobile} isIpad={isIpad} />
-              </Center>
-            </Stage>
-        </Canvas>
+      {/* 1. LOGO */}
+      <div ref={logoRef} className="relative w-[280px] md:w-[290px] lg:w-[320px] aspect-square mb-2 opacity-0">
+        <Image 
+          src="/logo.png" 
+          alt="Al Amin Logo"
+          fill
+          priority
+          className="object-contain drop-shadow-[0_0_40px_rgba(255,68,0,0.15)]"
+        />
       </div>
+
+      {/* 2. SUBTITLE */}
+      <p 
+        ref={subtitleRef} 
+        className="text-[#F1B135] font-bold uppercase text-lg md:text-5xl mb-10 opacity-0"
+      >
+        نتميز بالجودة والنوعية
+      </p>
+
+      {/* 3. BUTTON */}
+      <div ref={buttonRef} className="opacity-0">
+        <Link href="/menu" className="group relative inline-flex flex-col items-center justify-center">
+          {/* Button Glow Effect */}
+          <div className="absolute inset-0 bg-[#F3494A] blur-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-500 rounded-full" />
+          
+          <div className="relative px-12 py-5 bg-white text-black font-black text-lg md:text-xl rounded-full flex items-center gap-3 transition-all duration-300 group-hover:bg-[#F3494A] group-hover:text-[#F1B135] group-hover:scale-105 active:scale-95 shadow-xl">
+            <span>VIEW MENU</span>
+          </div>
+        </Link>
+      </div>
+
     </main>
   );
 }
