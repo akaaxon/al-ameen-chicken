@@ -27,7 +27,7 @@ export default function Header() {
     { label: "WhatsApp", link: "https://wa.me/96170772324" },
   ];
 
-  const colors = ["#ff4400", "#1a1a1a"];
+  const colors = ["#F3494A", "#1a1a1a"];
 
   // Scroll detection
   useEffect(() => {
@@ -111,7 +111,7 @@ export default function Header() {
 
           <button
             onClick={toggleMenu}
-            className="relative z-[120] w-12 h-12 flex items-center justify-center bg-white/5 border border-white/10 rounded-full hover:bg-[#ff4400] hover:text-black transition-all group"
+            className="relative z-[120] w-12 h-12 flex items-center justify-center bg-white/5 border border-white/10 rounded-full hover:bg-[#F3494A] hover:text-black transition-all group"
           >
             <span ref={iconRef} className="relative w-5 h-5 flex items-center justify-center pointer-events-none">
               <span className="absolute w-full h-0.5 bg-current rounded-full"></span>

@@ -99,7 +99,7 @@ function MenuGrid() {
 
   return (
     // --- PRODUCT GRID WITH FIXED CATEGORY HEADER ---
-<div className="min-h-screen bg-black text-white pb-32 pt-28 relative selection:bg-[#ff4400] selection:text-black">
+<div className="min-h-screen bg-black text-white pb-32 pt-28 relative selection:bg-[#F3494A] selection:text-black">
   {/* CATEGORY HEADER */}
   <header
   className="sticky top-[var(--header-height)] z-[50] bg-black/90 backdrop-blur-xl border-b border-white/5 py-4 transition-all"
@@ -108,7 +108,7 @@ function MenuGrid() {
     <div className="max-w-[1400px] mx-auto px-6">
       <div className="flex justify-between items-end mb-4 md:mb-6">
         <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none">
-          The <span className="text-red-600">Menu</span>
+          The <span className="text-[#F3494A">Menu</span>
         </h1>
         <div className="flex flex-col items-end">
           <span className="text-sm font-bold text-[#F3494A] uppercase">
@@ -163,7 +163,7 @@ function MenuGrid() {
   {cartCount > 0 && (
     <button
       onClick={() => setIsCartOpen(true)}
-      className="fixed bottom-8 right-6 md:right-12 z-[60] bg-[#ff4400] text-black p-5 md:p-6 rounded-full shadow-[0_10px_40px_rgba(255,68,0,0.4)] hover:scale-110 active:scale-90 transition-all group"
+      className="fixed bottom-8 right-6 md:right-12 z-[60] bg-[#F3494A] text-black p-5 md:p-6 rounded-full shadow-[0_10px_40px_rgba(255,68,0,0.4)] hover:scale-110 active:scale-90 transition-all group"
     >
       <span className="absolute -top-1 -right-1 bg-white text-black text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center border-4 border-black group-hover:bg-black group-hover:text-white transition-colors">
         {cartCount}
