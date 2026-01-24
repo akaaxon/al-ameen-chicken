@@ -102,9 +102,9 @@ function MenuGrid() {
 <div className="min-h-screen bg-black text-white pb-32 pt-28 relative selection:bg-[#ff4400] selection:text-black">
   {/* CATEGORY HEADER */}
   <header
-    className="sticky top-[var(--header-height)] z-[50] bg-black/90 backdrop-blur-xl border-b border-white/5 py-4 transition-all"
-    style={{ "--header-height": "80px" }} // adjust to match your Header height
-  >
+  className="sticky top-[var(--header-height)] z-[50] bg-black/90 backdrop-blur-xl border-b border-white/5 py-4 transition-all"
+  style={{ "--header-height": "80px" } as React.CSSProperties}
+>
     <div className="max-w-[1400px] mx-auto px-6">
       <div className="flex justify-between items-end mb-4 md:mb-6">
         <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none">
