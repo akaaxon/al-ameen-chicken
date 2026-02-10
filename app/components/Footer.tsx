@@ -16,16 +16,15 @@ export default function Footer() {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      // Create a simple reveal for footer elements
       gsap.from(".footer-anim", {
         scrollTrigger: {
           trigger: footerRef.current,
-          start: "top 70%", // Starts when the footer enters the bottom of the screen
+          start: "top 85%", 
         },
         y: 30,
         opacity: 0,
-        duration: 2,
-        stagger: 0.15,
+        duration: 1.2,
+        stagger: 0.1,
         ease: "power3.out",
       });
     }, footerRef);
@@ -54,6 +53,8 @@ export default function Footer() {
             <a 
               key={social.label}
               href={social.link}   
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-2xl font-bold hover:text-[#ff4400] transition-colors flex items-center justify-center md:justify-start gap-2 group"
             >
               { social.label } 
@@ -63,12 +64,27 @@ export default function Footer() {
             </a>
           ))}
         </div>
-
       </div>
       
-      {/* Copyright */}
-      <div className="footer-anim text-center text-white/30 mt-24 text-sm tracking-widest uppercase font-bold">
-        © 2026 Al Amin Chicken. All rights reserved.
+      {/* Bottom Section: Dev Credit & Copyright */}
+      <div className="pt-2 border-t border-white/5 flex flex-col items-center gap-4">
+        {/* Powered By Section */}
+        <div className="footer-anim text-white/40 text-xs md:text-sm font-bold uppercase tracking-[0.2em]">
+          Powered by{" "}
+          <a 
+            href="https://axondevs.work" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-[#FAF9F6] hover:text-[#ff4400] transition-colors duration-300 underline underline-offset-4 decoration-white/20 hover:decoration-[#ff4400]"
+          >
+            Axon Devs
+          </a>
+        </div>
+
+        {/* Copyright */}
+        <div className="footer-anim text-center text-white/20 text-[10px] md:text-xs tracking-widest uppercase font-medium">
+          © 2026 Al Amin Chicken. All rights reserved.
+        </div>
       </div>
     </footer>
   );

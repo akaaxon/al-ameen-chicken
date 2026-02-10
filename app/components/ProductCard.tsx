@@ -26,8 +26,7 @@ export default function ProductCard({ product, onAdd }: { product: Product, onAd
           <span className="text-[#F3494A] font-black font-mono text-xs md:text-base">${product.price.toFixed(2)}</span>
         </div>
 
-        {/* IMPROVED ADD TO CART ACTION */}
-        {/* Desktop Hover Overlay (Hidden on touch devices usually, or kept for flair) */}
+        {/* DESKTOP ADD BUTTON */}
         <button 
           onClick={(e) => { e.preventDefault(); onAdd(); }}
           className="absolute inset-0 bg-black/40 opacity-0 md:group-hover:opacity-100 transition-all duration-500 hidden md:flex items-center justify-center backdrop-blur-[2px] z-30"
@@ -37,7 +36,7 @@ export default function ProductCard({ product, onAdd }: { product: Product, onAd
           </div>
         </button>
 
-        {/* Mobile-Friendly Quick Add Button (Always visible on mobile) */}
+        {/* MOBILE ADD BUTTON */}
         <button 
           onClick={(e) => { e.preventDefault(); onAdd(); }}
           className="md:hidden absolute bottom-2 right-2 z-40 bg-[#F3494A] text-black w-10 h-10 rounded-xl flex items-center justify-center shadow-lg active:scale-90 transition-transform"
@@ -48,7 +47,8 @@ export default function ProductCard({ product, onAdd }: { product: Product, onAd
 
       {/* CONTENT */}
       <div className="pt-3 px-1 md:pt-5 md:px-2 pb-2 flex flex-col flex-grow">
-        <h3 className="font-black text-sm md:text-xl uppercase tracking-tighter text-[#F1B135] group-hover:text-[#F3494A] transition-colors line-clamp-1 mb-1">
+        {/* FIXED: Removed line-clamp and added min-height for alignment */}
+        <h3 className="font-black text-sm md:text-xl uppercase tracking-tighter text-[#F1B135] group-hover:text-[#F3494A] transition-colors mb-1 leading-tight md:min-h-[3.5rem] flex items-center">
           {product.name}
         </h3>
         
