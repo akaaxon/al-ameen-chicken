@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     
     // Internal pagination - these don't show up in the browser URL
     const start = parseInt(searchParams.get("start") || "0");
-    const limit = 10;
+    const limit = 8;
     const end = start + limit - 1;
 
     let query = supabaseChicken
