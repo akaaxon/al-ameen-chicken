@@ -18,7 +18,6 @@ export default function Header() {
     { label: "Home", link: "/" },
     { label: "Menu", link: "/menu" },
     { label: "Location", link: "/about" },
-    { label: "Contact Us", link: "/contact" },
   ];
 
   const socialItems = [
