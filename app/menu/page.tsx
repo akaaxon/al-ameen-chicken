@@ -63,7 +63,7 @@ function MenuGrid() {
 
     observer.current = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && hasMore) {
-        setOffset((prev) => prev + 10);
+        setOffset((prev) => prev + 8);
       }
     }, { threshold: 0.1 });
 
@@ -100,7 +100,7 @@ function MenuGrid() {
         const data: Product[] = await res.json();
         
         setProducts(prev => (offset === 0 ? data : [...prev, ...data]));
-        setHasMore(data.length === 10);
+        setHasMore(data.length === 8);
       } catch (err) {
         console.error("Product error:", err);
       } finally {
