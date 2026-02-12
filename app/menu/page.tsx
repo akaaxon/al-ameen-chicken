@@ -82,7 +82,7 @@ function MenuGrid() {
 
   // --- FETCH CATEGORIES ---
   useEffect(() => {
-    fetch("/api/categories/get", {cache:'no-store'})
+    fetch("/api/categories/get")
       .then(res => res.json())
       .then(data => setCategories([{ id: "all", title: "All Items" }, ...data]))
       .catch(err => console.error("Category error:", err));
@@ -94,7 +94,7 @@ function MenuGrid() {
       try {
         if (offset > 0) setFetchingNextPage(true);
         
-        const res = await fetch(`/api/products/get?start=${offset}${activeCategory !== 'all' ? `&category_id=${activeCategory}` : ''}`, {cache: 'no-store'});
+        const res = await fetch(`/api/products/get?start=${offset}${activeCategory !== 'all' ? `&category_id=${activeCategory}` : ''}`);
         if (!res.ok) throw new Error("Fetch failed");
         
         const data: Product[] = await res.json();

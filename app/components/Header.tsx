@@ -17,7 +17,7 @@ export default function Header() {
   const menuItems = [
     { label: "Home", link: "/" },
     { label: "Menu", link: "/menu" },
-    { label: "Location", link: "/about" },
+    { label: "Info", link: "/info" },
   ];
 
   const socialItems = [
