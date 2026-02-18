@@ -3,7 +3,7 @@ import { supabaseChicken } from "@/lib/supabase";
 export const dynamic = 'force-dynamic';
 export async function GET() {
     const sortedCategories =[
-  "Appetizer", "Sandwich", "Burger", "Chicken", 
+  "Appetizers", "Sandwiches", "Burgers", "Chicken", 
   "Meals", "Wings", "Offers", "Sauce", "Drinks"
 ];
     const { data, error } = await supabaseChicken
