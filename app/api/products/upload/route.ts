@@ -30,7 +30,7 @@ export async function POST(req: Request) {
 
     const { error: storageError } = await supabaseChicken.storage
       .from("images")
-      .upload(filePath, file);
+      .upload(filePath, file, {cacheControl: "max-age=259200"}); // Cache for 3 days
 
     if (storageError) throw storageError;
 
