@@ -10,7 +10,8 @@ if (!supabaseUrl || !supabaseServiceRoleKey) {
 }
 
 // Provide empty strings as fallbacks so createClient doesn't crash the builder
-export const supabaseChicken = createClient(
-  supabaseUrl || '',
-  supabaseServiceRoleKey || ''
-);
+export const supabaseChicken = createClient(supabaseUrl, supabaseServiceRoleKey, {
+  db: {
+    schema: 'private', // <--- This makes 'private' the default everywhere
+  },
+});
