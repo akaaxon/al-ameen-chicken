@@ -8,7 +8,6 @@ import { revalidatePath } from "next/cache";
 export async function fetchCategories() {
   // Production version: Fetches categories AND counts how many products are in each
   const { data, error } = await supabaseChicken
-    .schema('private')
     .from("categories")
     .select(`
       id, 
