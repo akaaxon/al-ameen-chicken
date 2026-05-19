@@ -6,7 +6,6 @@ import {
   useRef,
   useLayoutEffect,
   Suspense,
-  useMemo,
   useCallback,
 } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -24,13 +23,22 @@ interface Category {
   title: string;
 }
 
+// --- CUSTOM DEBOUNCE HOOK ---
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+  return debouncedValue;
+}
+
 function MenuGrid() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const containerRef = useRef<HTMLDivElement>(null);
   const observer = useRef<IntersectionObserver | null>(null);
   
-  // This ref tracks if we have already animated the entrance
   const hasAnimatedRef = useRef(false);
 
   // --- DATA STATE ---
@@ -43,6 +51,8 @@ function MenuGrid() {
   
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
   const activeCategory = searchParams.get("category") || "all";
 
@@ -62,23 +72,23 @@ function MenuGrid() {
     if (observer.current) observer.current.disconnect();
 
     observer.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && hasMore) {
+      // Only trigger pagination if we are NOT searching and have more items
+      if (entries[0].isIntersecting && hasMore && !debouncedSearchQuery) {
         setOffset((prev) => prev + 8);
       }
     }, { threshold: 0.1 });
 
     if (node) observer.current.observe(node);
-  }, [loading, fetchingNextPage, hasMore]);
+  }, [loading, fetchingNextPage, hasMore, debouncedSearchQuery]);
 
-  // --- RESET ON CATEGORY CHANGE ---
+  // --- RESET ON CATEGORY OR SEARCH CHANGE ---
   useEffect(() => {
     setProducts([]);
     setOffset(0);
     setHasMore(true);
     setLoading(true);
-    // Reset animation flag when switching categories
     hasAnimatedRef.current = false;
-  }, [activeCategory]);
+  }, [activeCategory, debouncedSearchQuery]);
 
   // --- FETCH CATEGORIES ---
   useEffect(() => {
@@ -88,19 +98,39 @@ function MenuGrid() {
       .catch(err => console.error("Category error:", err));
   }, []);
 
-  // --- FETCH PRODUCTS ---
+  // --- FETCH PRODUCTS (SPLIT LOGIC) ---
   useEffect(() => {
     async function fetchPage() {
       try {
         if (offset > 0) setFetchingNextPage(true);
         
-        const res = await fetch(`/api/products/get?start=${offset}${activeCategory !== 'all' ? `&category_id=${activeCategory}` : ''}`);
-        if (!res.ok) throw new Error("Fetch failed");
-        
-        const data: Product[] = await res.json();
-        
-        setProducts(prev => (offset === 0 ? data : [...prev, ...data]));
-        setHasMore(data.length === 8);
+        if (debouncedSearchQuery) {
+          // --- BRANCH 1: SEARCH API ---
+          const url = new URL("/api/products/search", window.location.origin);
+          url.searchParams.set("q", debouncedSearchQuery);
+          
+          const res = await fetch(url.toString());
+          if (!res.ok) throw new Error("Search failed");
+          
+          const data: Product[] = await res.json();
+          setProducts(data);
+          setHasMore(false); // Disable infinite scroll during search
+          
+        } else {
+          // --- BRANCH 2: NORMAL PAGINATION API ---
+          const url = new URL("/api/products/get", window.location.origin);
+          url.searchParams.set("start", offset.toString());
+          if (activeCategory !== 'all') {
+            url.searchParams.set("category_id", activeCategory);
+          }
+
+          const res = await fetch(url.toString());
+          if (!res.ok) throw new Error("Fetch failed");
+          
+          const data: Product[] = await res.json();
+          setProducts(prev => (offset === 0 ? data : [...prev, ...data]));
+          setHasMore(data.length === 8);
+        }
       } catch (err) {
         console.error("Product error:", err);
       } finally {
@@ -110,21 +140,10 @@ function MenuGrid() {
     }
 
     fetchPage();
-  }, [offset, activeCategory]);
+  }, [offset, activeCategory, debouncedSearchQuery]);
 
-  // --- FILTER PRODUCTS ---
-  const filteredProducts = useMemo(() => {
-    return products.filter((p) => {
-      return p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-             p.description.toLowerCase().includes(searchQuery.toLowerCase());
-    });
-  }, [products, searchQuery]);
-
-  // --- GSAP ANIMATION (TRUE FIRST LOAD ONLY) ---
+  // --- GSAP ANIMATION ---
   useLayoutEffect(() => {
-    // 1. Don't run if already loading
-    // 2. Don't run if we have already animated this category session
-    // 3. Don't run if there are no products to animate
     if (loading || hasAnimatedRef.current || products.length === 0) return;
 
     const ctx = gsap.context(() => {
@@ -138,7 +157,6 @@ function MenuGrid() {
           duration: 0.6, 
           ease: "power4.out",
           onComplete: () => {
-            // Set ref to true so it never runs again for this list
             hasAnimatedRef.current = true;
           }
         }
@@ -198,7 +216,7 @@ function MenuGrid() {
       </header>
 
       <main ref={containerRef} className="max-w-[1400px] mx-auto px-4 md:px-6 pt-8 grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-8 min-h-[400px]">
-        {filteredProducts.map((product) => (
+        {products.map((product) => (
           <div key={`${product.id}`} className="menu-card">
             <ProductCard product={product} onAdd={() => addToCart(product)} />
           </div>
@@ -208,7 +226,7 @@ function MenuGrid() {
           {fetchingNextPage && <div className="w-6 h-6 border-2 border-[#F3494A] border-t-transparent rounded-full animate-spin" />}
         </div>
 
-        {filteredProducts.length === 0 && !fetchingNextPage && (
+        {products.length === 0 && !fetchingNextPage && (
           <div className="col-span-full py-20 text-center">
             <p className="text-neutral-500 font-bold uppercase tracking-widest">No items found</p>
           </div>
