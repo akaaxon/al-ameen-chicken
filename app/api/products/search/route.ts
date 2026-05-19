@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { supabaseChicken } from "@/lib/supabase";
 
-c
 
 export async function GET(request: Request) {
   try {
