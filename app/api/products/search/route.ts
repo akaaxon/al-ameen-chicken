@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { supabaseChicken } from "@/lib/supabase";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+c
 
 export async function GET(request: Request) {
   try {
@@ -15,7 +14,7 @@ export async function GET(request: Request) {
     }
 
     // Search both name and description, case-insensitive
-    const { data, error } = await supabase
+    const { data, error } = await supabaseChicken
       .from('products')
       .select('*')
       .or(`name.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`)
