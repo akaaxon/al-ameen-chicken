@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { useState } from "react";
 import { Plus } from "lucide-react";
 
@@ -7,18 +6,32 @@ export interface Product { id: string; category_id: string; name: string; price:
 export default function ProductCard({ product, onAdd }: { product: Product, onAdd: () => void }) {
   const [isImageLoading, setIsImageLoading] = useState(true);
 
+  // A simple helper function to swap the domain
+const getCdnUrl = (originalUrl: string) => {
+  if (!originalUrl) return "https://placehold.co/600x600/171717/FFFFFF/webp?text=MenuItem";
+  
+  // This replaces the Supabase domain with your CDN domain
+  return originalUrl.replace(
+    /https:\/\/[^/]+/, 
+    "https://cdn.akaaxon.workers.dev"
+  );
+};
+
   return (
     <div className="menu-card group relative flex flex-col bg-neutral-900/20 rounded-[1.5rem] md:rounded-[2.5rem] p-2.5 md:p-4 border border-white/5 hover:border-[#F3494A]/40 transition-all duration-500 hover:bg-neutral-900/40 h-full">
       
       {/* IMAGE CONTAINER */}
       <div className="relative aspect-square w-full overflow-hidden rounded-[1.2rem] md:rounded-[2rem] bg-neutral-900 shadow-xl shrink-0">
-        <Image
-          src={product.image_url || "/placeholder.jpg"}
+        <img
+          src={getCdnUrl(product.image_url)}
           alt={product.name}
-          fill
-          sizes="(max-width: 768px) 50vw, 33vw"
-          className={`object-cover transition-all duration-1000 group-hover:scale-110 ${isImageLoading ? 'scale-110 blur-2xl opacity-0' : 'scale-100 blur-0 opacity-100'}`}
-          onLoadingComplete={() => setIsImageLoading(false)}
+          loading="lazy"
+          // absolute inset-0 w-full h-full makes it act exactly like next/image fill
+          className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 ${
+            isImageLoading ? 'scale-110 blur-2xl opacity-0' : 'scale-100 blur-0 opacity-100'
+          }`}
+          onLoad={() => setIsImageLoading(false)}
+          onError={(e) => { e.currentTarget.src = "https://placehold.co/600x600/171717/A594F9/webp?text=Error"; }}
         />
         
         {/* PRICE TAG */}

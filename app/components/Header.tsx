@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, useLayoutEffect, useCallback } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { gsap } from "gsap";
 
 export default function Header() {
@@ -98,12 +97,11 @@ export default function Header() {
       >
         <div className="max-w-[1400px] mx-auto px-6 flex items-center justify-between">
           <Link href="/" className="relative z-[120]">
-            <Image
+            <img
               src="/logo.png"
               alt="Logo"
               width={120}
               height={50}
-              priority
               className={`h-10 w-auto transition-all duration-500`}
             />
           </Link>

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import {
@@ -144,10 +143,10 @@ export default function CartDrawer({
               cart.map((item) => (
                 <div key={item.id} className="flex gap-4 items-center">
                   <div className="relative w-20 h-20 rounded-xl overflow-hidden">
-                    <Image
+                    <img
                       src={item.image_url}
                       alt={item.name}
-                      fill
+                      loading="lazy"
                       className="object-cover"
                     />
                   </div>

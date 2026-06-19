@@ -2,7 +2,6 @@
 
 import { useRef, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import gsap from "gsap";
 
 export default function Hero() {
@@ -45,12 +44,9 @@ export default function Hero() {
         ref={logoRef} 
         className="relative w-[250px] md:w-[290px] lg:w-[320px] aspect-square mb-6 opacity-0"
       >
-        <Image 
+        <img 
           src="/logo.png" 
           alt="Al Amin Logo"
-          fill
-          priority
-
           className="object-contain"
         />
       </div>
