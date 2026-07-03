@@ -208,7 +208,7 @@ function MenuGrid() {
             </div>
           </div>
 
-          <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+          <div className="flex flex-wrap gap-2 pb-2">
             {categories.map((cat) => (
               <button
                 key={cat.id}
