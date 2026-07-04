@@ -58,9 +58,6 @@ export default function Footer() {
               className="text-2xl font-bold hover:text-[#ff4400] transition-colors flex items-center justify-center md:justify-start gap-2 group"
             >
               { social.label } 
-              <span className="text-sm opacity-50 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300">
-                ↗
-              </span>
             </a>
           ))}
         </div>
