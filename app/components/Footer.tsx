@@ -1,8 +1,9 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Image from "next/image";
 
 export default function Footer() {
   const footerRef = useRef(null);
@@ -19,13 +20,13 @@ export default function Footer() {
       gsap.from(".footer-anim", {
         scrollTrigger: {
           trigger: footerRef.current,
-          start: "top 85%", 
+          start: "top 85%",
         },
-        y: 30,
+        y: 20, // Reduced translation for a tighter, more subtle reveal
         opacity: 0,
-        duration: 1.2,
-        stagger: 0.1,
-        ease: "power3.out",
+        duration: 1,
+        stagger: 0.15,
+        ease: "power2.out",
       });
     }, footerRef);
 
@@ -33,54 +34,71 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer 
-      ref={footerRef} 
-      className="bg-white/5 border-t border-white/10 pt-20 pb-10 px-6 mt-20"
+    <footer
+      ref={footerRef}
+      className="bg-black pt-20 pb-8 px-6 mt-20"
     >
-      <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
+      <div className="max-w-[1200px] mx-auto flex flex-col items-center md:items-start">
         
-        {/* Brand Section */}
-        <div className="footer-anim text-center md:text-right" dir="rtl">
-          <h2 className="text-4xl font-black mb-4 uppercase tracking-tighter">
-            فروج <span className="text-[#ff4400]">الأمين</span>
-          </h2>
-          <p className="text-xl text-white/60 font-medium">أمين بطعمتو.</p>
+        {/* Top Section: Logo */}
+        <div className="footer-anim w-full flex justify-center md:justify-start mb-12">
+          <div className="relative w-40 h-24 md:w-48 md:h-28">
+            <Image
+              src="/logo.png"
+              alt="فروج الأمين - Al Amin Chicken Logo"
+              fill
+              className="object-contain object-center md:object-left"
+              priority
+            />
+          </div>
         </div>
 
-        {/* Social Links */}
-        <div className="footer-anim flex flex-col gap-3 text-center md:text-left">
-          {socialItems.map((social) => (
-            <a 
-              key={social.label}
-              href={social.link}   
+        {/* Middle Section: Editorial Social Links */}
+        <div className="footer-anim w-full border-y border-white/10 py-6 md:py-8 mb-8">
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 md:gap-8">
+            {socialItems.map((social, index) => (
+              <React.Fragment key={social.label}>
+                <a
+                  href={social.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm md:text-base font-semibold uppercase tracking-[0.15em] text-white/60 hover:text-[#ff4400] transition-colors duration-300"
+                >
+                  {social.label}
+                </a>
+                
+                {/* Custom Separator - hides after the last item */}
+                {index !== socialItems.length - 1 && (
+                  <span className="text-[#ff4400]/90 text-xs md:text-sm font-light select-none">
+                    /
+                  </span>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom Section: Dev Credit & Copyright */}
+        <div className="w-full flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+          
+          {/* Copyright */}
+          <div className="footer-anim text-white/30 text-[11px] md:text-xs font-medium tracking-widest uppercase">
+            © 2026 Al Amin Chicken. All rights reserved.
+          </div>
+
+          {/* Powered By Section */}
+          <div className="footer-anim text-white/30 text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase flex items-center gap-1.5">
+            Powered by{" "}
+            <a
+              href="https://vrydet.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-2xl font-bold hover:text-[#ff4400] transition-colors flex items-center justify-center md:justify-start gap-2 group"
+              className="text-white hover:text-[#ff4400] transition-colors duration-300 font-bold"
             >
-              { social.label } 
+              VRYDET
             </a>
-          ))}
-        </div>
-      </div>
-      
-      {/* Bottom Section: Dev Credit & Copyright */}
-      <div className="pt-2 border-t border-white/5 flex flex-col items-center gap-4">
-        {/* Powered By Section */}
-        <div className="footer-anim text-white/40 text-xs md:text-sm font-bold uppercase tracking-[0.2em]">
-          Powered by{" "}
-          <a 
-            href="https://axondevs.work" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-[#FAF9F6] hover:text-[#ff4400] transition-colors duration-300 underline underline-offset-4 decoration-white/20 hover:decoration-[#ff4400]"
-          >
-            Axon Devs
-          </a>
-        </div>
-
-        {/* Copyright */}
-        <div className="footer-anim text-center text-white/20 text-[10px] md:text-xs tracking-widest uppercase font-medium">
-          © 2026 Al Amin Chicken. All rights reserved.
+          </div>
+          
         </div>
       </div>
     </footer>
