@@ -90,12 +90,12 @@ export default function Footer() {
           <div className="footer-anim text-white/30 text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase flex items-center gap-1.5">
             Powered by{" "}
             <a
-              href="https://vrydet.com"
+              href="https://yetnext.net"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white hover:text-[#ff4400] transition-colors duration-300 font-bold"
             >
-              VRYDET
+              YetNext
             </a>
           </div>
           
