@@ -18,7 +18,7 @@ const getCdnUrl = (originalUrl: string) => {
 };
 
   return (
-    <div className="menu-card group relative flex flex-col bg-neutral-900/20 rounded-[1.5rem] md:rounded-[2.5rem] p-2.5 md:p-4 border border-white/5 hover:border-[#F3494A]/40 transition-all duration-500 hover:bg-neutral-900/40 h-full">
+    <div className="menu-card group relative flex flex-col bg-neutral-900/20 rounded-[1.5rem] md:rounded-[2.5rem] p-2.5 pb-3 md:p-4 md:pb-5 border border-white/5 hover:border-[#F3494A]/40 transition-all duration-500 hover:bg-neutral-900/40 h-full">
       
       {/* IMAGE CONTAINER */}
       <div className="relative aspect-square w-full overflow-hidden rounded-[1.2rem] md:rounded-[2rem] bg-neutral-900 shadow-xl shrink-0">
@@ -33,41 +33,36 @@ const getCdnUrl = (originalUrl: string) => {
           onLoad={() => setIsImageLoading(false)}
           onError={(e) => { e.currentTarget.src = "https://placehold.co/600x600/171717/A594F9/webp?text=Error"; }}
         />
-        
-        {/* PRICE TAG */}
-        <div className="absolute top-2 left-2 md:top-4 md:left-4 bg-black/60 backdrop-blur-xl px-2.5 py-1 md:px-4 md:py-1.5 rounded-lg md:rounded-xl border border-white/10 z-20">
-          <span className="text-[#F3494A] font-black font-mono text-xs md:text-base">${product.price.toFixed(2)}</span>
-        </div>
-
-        {/* DESKTOP ADD BUTTON */}
-        <button 
-          onClick={(e) => { e.preventDefault(); onAdd(); }}
-          className="absolute inset-0 bg-black/40 opacity-0 md:group-hover:opacity-100 transition-all duration-500 hidden md:flex items-center justify-center backdrop-blur-[2px] z-30"
-        >
-          <div className="bg-[#F3494A] text-black w-16 h-16 rounded-full flex items-center justify-center scale-50 group-hover:scale-100 transition-all duration-500 shadow-[0_0_40px_rgba(243,73,74,0.5)]">
-            <Plus size={28} strokeWidth={3} />
-          </div>
-        </button>
-
-        {/* MOBILE ADD BUTTON */}
-        <button 
-          onClick={(e) => { e.preventDefault(); onAdd(); }}
-          className="md:hidden absolute bottom-2 right-2 z-40 bg-[#F3494A] text-black w-10 h-10 rounded-xl flex items-center justify-center shadow-lg active:scale-90 transition-transform"
-        >
-          <Plus size={20} strokeWidth={3} />
-        </button>
       </div>
 
       {/* CONTENT */}
-      <div className="pt-3 px-1 md:pt-5 md:px-2 pb-2 flex flex-col flex-grow">
-        {/* FIXED: Removed line-clamp and added min-height for alignment */}
-        <h3 className="font-black text-sm md:text-xl uppercase tracking-tighter text-[#F1B135] group-hover:text-[#F3494A] transition-colors mb-1 leading-tight md:min-h-[3.5rem] flex items-center">
+      <div className="pt-3 px-1 md:pt-5 md:px-2 flex flex-col flex-grow">
+        <h3 className="font-black text-sm md:text-xl uppercase tracking-tighter text-[#F1B135] group-hover:text-[#F3494A] transition-colors mb-1 leading-tight">
           {product.name}
         </h3>
-        
-        <p className="text-white text-[10px] md:text-xs font-medium leading-relaxed opacity-80 min-h-[40px]">
-          {product.description}
-        </p>
+
+        {product.description && (
+          <p className="text-white text-[10px] md:text-xs font-medium leading-relaxed opacity-70">
+            {product.description}
+          </p>
+        )}
+
+        {/* PRICE + ADD: pinned to the bottom so prices line up across a row */}
+        <div className="mt-auto pt-3 md:pt-4 flex items-center justify-between gap-2 border-t border-white/5">
+          <p className="font-black leading-none text-white">
+            <span className="text-[#F3494A] text-xs md:text-base align-top mr-0.5">$</span>
+            <span className="text-lg md:text-3xl tracking-tighter">{Math.trunc(product.price)}</span>
+            <span className="text-xs md:text-base text-neutral-400">.{product.price.toFixed(2).split(".")[1]}</span>
+          </p>
+
+          <button
+            onClick={(e) => { e.preventDefault(); onAdd(); }}
+            aria-label={`Add ${product.name} to bag`}
+            className="shrink-0 bg-[#F3494A] text-black w-9 h-9 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center shadow-[0_6px_20px_-6px_rgba(243,73,74,0.6)] hover:scale-105 active:scale-90 transition-transform"
+          >
+            <Plus size={18} strokeWidth={3} className="md:w-6 md:h-6" />
+          </button>
+        </div>
       </div>
     </div>
   );

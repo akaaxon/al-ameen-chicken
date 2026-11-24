@@ -14,6 +14,7 @@ import { ShoppingBag, Search, X } from "lucide-react";
 
 import ProductCard from "../components/ProductCard";
 import CartDrawer from "../components/CartDrawer";
+import CategoryBar from "../components/CategoryBar";
 import type { Product } from "../components/ProductCard";
 import { useCart } from "@/hooks/useCart";
 
@@ -186,7 +187,7 @@ function MenuGrid() {
         style={{ "--header-height": "80px" } as React.CSSProperties}
       >
         <div className="max-w-[1400px] mx-auto px-6">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4 mb-4 md:mb-6">
             <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none">
               The <span className="text-[#F3494A]">Menu</span>
             </h1>
@@ -208,21 +209,11 @@ function MenuGrid() {
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2 pb-2">
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => router.replace(cat.id === "all" ? "/menu" : `/menu?category=${cat.id}`, { scroll: false })}
-                className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap border ${
-                  activeCategory === cat.id
-                    ? "bg-[#F1B135] text-[#F3494A] border-[#F1B135] shadow-[0_0_20px_rgba(255,68,0,0.3)]"
-                    : "bg-neutral-900/50 text-[#F1B135] border-white/5 hover:border-white/20"
-                }`}
-              >
-                {cat.title}
-              </button>
-            ))}
-          </div>
+          <CategoryBar
+            categories={categories}
+            active={activeCategory}
+            onSelect={(id) => router.replace(id === "all" ? "/menu" : `/menu?category=${id}`, { scroll: false })}
+          />
         </div>
       </header>
 
