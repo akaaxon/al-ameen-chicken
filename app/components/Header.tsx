@@ -16,6 +16,7 @@ export default function Header() {
   const menuItems = [
     { label: "Home", link: "/" },
     { label: "Menu", link: "/menu" },
+    { label: "My Points", link: "/account" },
     { label: "Info", link: "/info" },
   ];
 

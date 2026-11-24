@@ -42,6 +42,7 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({
+      id: order.id, // kept by the browser to check this order's status later
       order_number: order.order_number,
       total: order.total,
       points_earned: order.points_earned,
